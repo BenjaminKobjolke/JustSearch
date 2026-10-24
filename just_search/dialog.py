@@ -55,15 +55,17 @@ class SearchDialog(QDialog):
         self._text_enabled = QCheckBox('&Text in files')
         self._text = _editable_combo(settings.text_history())
         self._encoding = _editable_combo(ENCODINGS)
-        self._text_enabled.toggled.connect(self._text.setEnabled)
-        self._text_enabled.toggled.connect(self._encoding.setEnabled)
+        self._ignore_case = QCheckBox('&Ignore case')
+        for widget in (self._text, self._encoding, self._ignore_case):
+            self._text_enabled.toggled.connect(widget.setEnabled)
 
         form = QFormLayout()
         form.addRow('&Name (F1)', self._query)
         form.addRow('Match', _row(self._mode, QLabel('Find'), self._kind,
                                    QLabel('Depth (0 = this folder only)'), self._depth))
         form.addRow('&Folder (F2)', self._folder)
-        form.addRow(self._text_enabled, _row(self._text, QLabel('Encoding'), self._encoding))
+        form.addRow(self._text_enabled, _row(self._text, QLabel('Encoding'), self._encoding,
+                                             self._ignore_case))
 
         self._results = QListWidget()
         self._results.itemActivated.connect(self._jump)
@@ -92,9 +94,10 @@ class SearchDialog(QDialog):
         self._folder.setText(folder)
         self._text_enabled.setChecked(settings.text_search_enabled())
         self._encoding.setEditText(options.encoding)
+        self._ignore_case.setChecked(options.ignore_case)
         enabled = self._text_enabled.isChecked()
-        self._text.setEnabled(enabled)
-        self._encoding.setEnabled(enabled)
+        for widget in (self._text, self._encoding, self._ignore_case):
+            widget.setEnabled(enabled)
         self._query.lineEdit().selectAll()
 
     def _options(self):
@@ -106,6 +109,7 @@ class SearchDialog(QDialog):
             max_depth=None if depth == DEPTH_ALL else depth,
             text=self._text.currentText() if self._text_enabled.isChecked() else '',
             encoding=self._encoding.currentText().strip() or ENCODINGS[0],
+            ignore_case=self._ignore_case.isChecked(),
             excluded=settings.excluded_folders(),
         )
 

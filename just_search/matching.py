@@ -43,14 +43,16 @@ def build_matcher(query, mode):
     raise ValueError('Unknown search mode: %r' % mode)
 
 
-def file_contains(path, text, encoding, stop):
+def file_contains(path, text, encoding, stop, ignore_case=False):
     """True if `text` occurs in the file. `encoding` must be valid (see codecs.lookup)."""
+    if ignore_case:
+        text = text.casefold()
     try:
         with open(path, 'r', encoding=encoding, errors='ignore') as f:
             for line in f:
                 if stop():
                     return False
-                if text in line:
+                if text in (line.casefold() if ignore_case else line):
                     return True
     except OSError:
         pass

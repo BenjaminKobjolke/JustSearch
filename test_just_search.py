@@ -93,6 +93,11 @@ def test_search(root):
         os.path.join('invoices 2026', 'deep', 'umlaut.txt')
     ]
 
+    options = SearchOptions(text='HELLO', excluded=frozenset(['.git']))
+    assert list(search(root, options, _never)) == []
+    options.ignore_case = True
+    assert _rel_paths(search(root, options, _never)) == ['notes.txt']
+
     assert list(search(root, SearchOptions(), lambda: True)) == []
 
 

@@ -30,6 +30,7 @@ class SearchOptions:
     max_depth: Optional[int] = None   # None: all subfolders, 0: only the folder itself
     text: str = ''                    # empty: do not look inside files
     encoding: str = 'utf-8'
+    ignore_case: bool = False         # for `text` only; names always ignore case
     excluded: FrozenSet[str] = frozenset()   # lower-case folder names never entered
 
 
@@ -48,7 +49,7 @@ def search(root, options, stop, on_scanned=None):
         if not matches(hit.rel_path):
             continue
         if options.text and (hit.is_dir or not file_contains(
-                hit.path, options.text, options.encoding, stop)):
+                hit.path, options.text, options.encoding, stop, options.ignore_case)):
             continue
         yield hit
 

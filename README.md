@@ -30,7 +30,7 @@ No dependencies beyond fman.
 | Find | Files and folders, files only, or folders only. Folders only never lists files, so it is fast on big trees. |
 | Depth | `all`, `0` for this folder only, or how many levels of subfolders. |
 | Folder | Where to search. Opens on the pane's folder. |
-| Text in files | Only files that contain this text (case-sensitive), read with the chosen encoding. |
+| Text in files | Only files that contain this text, read with the chosen encoding. Case-sensitive unless `Ignore case` is checked (off by default). |
 
 Results appear while the search runs; `Stop` ends it. `Enter` or a double click on
 a result opens its folder in the pane with the cursor on it. `Show in pane` lists all
