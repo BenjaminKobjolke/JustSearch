@@ -1,7 +1,11 @@
 {
   "analysis_commands": [
-    "ruff check ."
+    "ruff check .",
+    "tools\\analyze_changed_and_new_files.bat"
   ],
+  "analysis_command_kinds": {
+    "tools\\analyze_changed_and_new_files.bat": "code_quality"
+  },
   "analysis_commands_seen": {
     "scripts": [
       "graphify_update.bat"
@@ -12,6 +16,9 @@
   "analysis_command_states": {
     "ruff check .": {
       "test": "green"
+    },
+    "tools\\analyze_changed_and_new_files.bat": {
+      "code_quality": "green"
     }
   }
 }
