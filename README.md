@@ -21,20 +21,21 @@ No dependencies beyond fman.
 
 ## Search window
 
-`Ctrl+F7` (`Cmd+F7` on macOS), or `Search With Dialog` in the command palette.
+`Alt+F7` or `Ctrl+F7` (`Cmd+F7` on macOS), or `Search With Dialog` in the command palette.
 
 | Field | Meaning |
 |---|---|
 | Name | What to look for. Empty matches everything. |
-| Match | `Words in name`: every word appears in the name, any order, case ignored. `Words in path`: the words appear in this order in the path below the folder (`fraenk 2026` finds `fraenk/.../2026`). `Wildcards`: `*.pdf`, `Test*`. `Regular expression`: searched in the name, case ignored. `Fuzzy`: the letters appear in order in the path. |
+| Match | `Words in name`: every word appears in the name, any order, case ignored. `Words in path`: the words appear in this order in the path below the folder (`fraenk 2026` finds `fraenk/.../2026`). `Wildcards`: `*.pdf`, `Test*`, or several patterns separated by `;` (`*.txt;*.pdf`). `Regular expression`: searched in the name, case ignored. `Fuzzy`: the letters appear in order in the path. |
 | Find | Files and folders, files only, or folders only. Folders only never lists files, so it is fast on big trees. |
 | Depth | `all`, `0` for this folder only, or how many levels of subfolders. |
 | Folder | Where to search. Opens on the pane's folder. |
 | Text in files | Only files that contain this text, read with the chosen encoding. Case-sensitive unless `Ignore case` is checked (off by default). |
 
 Results appear while the search runs; `Stop` ends it. `Enter` or a double click on
-a result opens its folder in the pane with the cursor on it. `Show in pane` lists all
-results flat in the pane and closes the window.
+a result opens its folder in the pane with the cursor on it. When a search with hits
+ends, the hits are listed flat in the pane and the window closes. With no hits, the
+window stays open.
 
 Keys: `F1` name, `F2` folder, `F3` results, `Esc` closes.
 
@@ -59,8 +60,9 @@ folder those results came from.
 ## Results in the pane
 
 The pane shows `search://<folder>` with the columns Name, Path, Size and Modified.
-`Enter` opens a folder, or opens a file's folder with the cursor on the file. Copy and
-the other file operations work on the real files.
+`Enter` opens a folder, or opens a file's folder with the cursor on the file. Delete,
+move to trash, move, copy and rename act on the real files; rows of deleted or moved
+files disappear. Rename asks for the new name in a prompt instead of editing it in the list.
 
 ## Settings
 
