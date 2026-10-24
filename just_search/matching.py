@@ -11,11 +11,12 @@ MODE_TOKENS_PATH = 'tokens_path'
 MODE_GLOB = 'glob'
 MODE_REGEX = 'regex'
 MODE_FUZZY = 'fuzzy'
+GLOB_SEPARATOR = ';'
 
 MODE_LABELS = (
     (MODE_TOKENS, 'Words in name (any order)'),
     (MODE_TOKENS_PATH, 'Words in path (in order)'),
-    (MODE_GLOB, 'Wildcards (*.pdf)'),
+    (MODE_GLOB, 'Wildcards (*.pdf;*.txt)'),
     (MODE_REGEX, 'Regular expression'),
     (MODE_FUZZY, 'Fuzzy'),
 )
@@ -32,7 +33,8 @@ def build_matcher(query, mode):
         tokens = query.lower().split()
         return lambda rel_path: _contains_in_order(rel_path.lower(), tokens)
     if mode == MODE_GLOB:
-        pattern = re.compile(fnmatch.translate(query), re.IGNORECASE)
+        parts = (part.strip() for part in query.split(GLOB_SEPARATOR))
+        pattern = re.compile('|'.join(fnmatch.translate(part) for part in parts if part), re.IGNORECASE)
         return lambda rel_path: bool(pattern.match(_leaf(rel_path)))
     if mode == MODE_REGEX:
         pattern = re.compile(query, re.IGNORECASE)

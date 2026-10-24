@@ -54,6 +54,14 @@ def test_matchers():
     assert not build_matcher('fraenk invoices', MODE_TOKENS_PATH)(path)
     assert build_matcher('*.PDF', MODE_GLOB)(path)
     assert not build_matcher('*.txt', MODE_GLOB)(path)
+    multi_wildcard = build_matcher('*.txt;*.pdf', MODE_GLOB)
+    assert multi_wildcard('fraenk.pdf')
+    assert multi_wildcard('notes.txt')
+    assert not multi_wildcard('x.doc')
+    spaced_wildcard = build_matcher(' *.txt ; ;', MODE_GLOB)
+    assert spaced_wildcard('notes.txt')
+    assert not spaced_wildcard('fraenk.pdf')
+    assert build_matcher(';', MODE_GLOB)('fraenk.pdf')
     assert build_matcher(r'^fr.*k\.pdf$', MODE_REGEX)(path)
     assert build_matcher('inv frk', MODE_FUZZY)(path)
     assert not build_matcher('kfr', MODE_FUZZY)('fraenk.pdf')
@@ -91,6 +99,14 @@ def test_search(root):
     options = SearchOptions(query='*.txt', mode=MODE_GLOB, text='grüß')
     assert _rel_paths(search(root, options, _never)) == [
         os.path.join('invoices 2026', 'deep', 'umlaut.txt')
+    ]
+
+    options = SearchOptions(query='*.txt;*.pdf', mode=MODE_GLOB, excluded=frozenset(['.git']))
+    assert _rel_paths(search(root, options, _never)) == [
+        os.path.join('invoices 2026', 'deep', 'umlaut.txt'),
+        os.path.join('invoices 2026', 'fraenk.pdf'),
+        'notes.txt',
+        'report 2026.pdf',
     ]
 
     options = SearchOptions(text='HELLO', excluded=frozenset(['.git']))
