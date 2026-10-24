@@ -1,5 +1,5 @@
-"""The search window: every option in one place, results listed live while the
-search runs, and a button to send them to the pane as a flat search:// list."""
+"""The search window: every option in one place, with hits sent to the pane
+as a flat search:// list when the search ends."""
 import codecs
 import os
 import queue
@@ -74,9 +74,8 @@ class SearchDialog(QDialog):
         self._search_button = _button('&Search', self._start)
         self._search_button.setDefault(True)
         self._stop_button = _button('Sto&p', self._stop_search)
-        self._pane_button = _button('Show in pan&e',self._show_in_pane)
         buttons = _row(self._status, self._search_button, self._stop_button,
-                       self._pane_button, _button('&Close', self.close))
+                       _button('&Close', self.close))
         buttons.insertStretch(1)
 
         layout = QVBoxLayout(self)
@@ -158,6 +157,8 @@ class SearchDialog(QDialog):
             self._timer.stop()
             self._worker = None
             self._set_running(False)
+            if self._hits:
+                self._show_in_pane()
 
     def _stop_search(self):
         self._stop.set()
@@ -165,7 +166,6 @@ class SearchDialog(QDialog):
     def _set_running(self, running):
         self._search_button.setEnabled(not running)
         self._stop_button.setEnabled(running)
-        self._pane_button.setEnabled(not running and bool(self._hits))
 
     def _jump(self, item):
         hit = self._hits[self._results.row(item)]
