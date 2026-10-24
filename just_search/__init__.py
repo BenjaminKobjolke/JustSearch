@@ -6,5 +6,6 @@ from .commands import (  # noqa: F401
     SearchWithLastSettings
 )
 from .pane_results import (  # noqa: F401
-    SearchName, SearchPath, SearchResultsFileSystem, SearchResultsListener
+    RenameSearchResult, RunOnSearchResults, SearchName, SearchPath,
+    SearchResultsFileSystem, SearchResultsListener
 )
