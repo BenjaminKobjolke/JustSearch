@@ -31,6 +31,17 @@ Do not inline rules back into this file and do not use `@import` for either file
 they are intentionally referenced, not imported.
 
 
+## Code Analysis
+
+Run the changed-files analyzer after implementation work:
+
+```powershell
+cmd /c ".\tools\analyze_changed_and_new_files.bat"
+```
+
+Use `tools/analyze_code.bat` for a full-project audit. Reports are written to
+`code_analysis_results/`; each analyzer writes its own CSV when it finds issues.
+
 # graphify
 
 This project's code directory is `.` (flat layout: `just_search/` and `test_just_search.py` in the root). The root `.graphifyignore` keeps non-code files out of the graph.
