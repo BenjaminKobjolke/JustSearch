@@ -1,13 +1,18 @@
 {
   "analysis_commands": [
     "ruff check .",
-    "tools\\analyze_changed_and_new_files.bat"
+    "tools\\analyze_changed_and_new_files.bat",
+    "tools\\analyze_code.bat"
   ],
   "analysis_command_kinds": {
     "tools\\analyze_changed_and_new_files.bat": "code_quality"
   },
   "analysis_commands_seen": {
     "scripts": [
+      "analyze_changed_and_new_files.bat",
+      "analyze_code.bat",
+      "analyze_code_config.bat",
+      "analyze_code_config.example.bat",
       "graphify_update.bat"
     ],
     "tests": true
@@ -19,6 +24,9 @@
     },
     "tools\\analyze_changed_and_new_files.bat": {
       "code_quality": "green"
+    },
+    "tools\\analyze_code.bat": {
+      "code_quality": "failed"
     }
   },
   "files": {
