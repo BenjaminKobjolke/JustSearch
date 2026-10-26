@@ -8,7 +8,13 @@ import os
 import fman
 from fman import DirectoryPaneCommand, DirectoryPaneListener, show_alert, show_prompt
 from fman.fs import FileSystem, Column, cached, is_dir as fs_is_dir, query as fs_query
-from fman.url import as_url, basename, splitscheme, dirname as url_dirname, join as url_join
+from fman.url import (
+    as_url,
+    basename,
+    splitscheme,
+    dirname as url_dirname,
+    join as url_join,
+)
 
 SCHEME = 'search://'
 _SEPARATOR = '|'
@@ -103,7 +109,10 @@ class SearchPath(Column):
 class SearchResultsListener(DirectoryPaneListener):
     def on_command(self, command_name, args):
         if _is_results_pane(self.pane):
-            if command_name in _FILE_ARGUMENT and _FILE_ARGUMENT[command_name] not in args:
+            if (
+                command_name in _FILE_ARGUMENT
+                and _FILE_ARGUMENT[command_name] not in args
+            ):
                 return RUN_ON_RESULTS_COMMAND, {'command': command_name}
             if command_name == 'rename':
                 return RENAME_RESULT_COMMAND, {}

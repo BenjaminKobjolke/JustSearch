@@ -28,7 +28,9 @@ class _SearchTask(Task):
         self.scanned = 0
 
     def __call__(self):
-        self.hits = list(search(self._folder, self._options, self._stop, self._on_scanned))
+        self.hits = list(
+            search(self._folder, self._options, self._stop, self._on_scanned)
+        )
 
     def _stop(self):
         self.check_canceled()   # raises Task.Canceled, which ends the walk
@@ -84,10 +86,14 @@ class _PromptSearch(DirectoryPaneCommand):
         if task is None:
             return
         if not task.hits:
-            show_status_message('No matches for %r in %d entries.' % (query, task.scanned), 5)
+            show_status_message(
+                'No matches for %r in %d entries.' % (query, task.scanned), 5
+            )
             return
         show_in_pane(self.pane, root_url, [hit.rel_path for hit in task.hits])
-        show_status_message('%d matches in %d entries' % (len(task.hits), task.scanned), 5)
+        show_status_message(
+            '%d matches in %d entries' % (len(task.hits), task.scanned), 5
+        )
 
 
 class SearchFilesAndFoldersTokenBased(_PromptSearch):

@@ -73,23 +73,36 @@ def test_scan_depth_kind_and_excluded(root):
     assert os.path.join('.git', 'config') not in everything
     assert os.path.join('invoices 2026', 'deep', 'umlaut.txt') in everything
 
-    current_only = _rel_paths(scan(root, SearchOptions(max_depth=0, excluded=excluded), _never))
+    current_only = _rel_paths(
+        scan(root, SearchOptions(max_depth=0, excluded=excluded), _never)
+    )
     assert current_only == ['invoices 2026', 'notes.txt', 'report 2026.pdf']
 
-    one_level = _rel_paths(scan(root, SearchOptions(max_depth=1, excluded=excluded), _never))
+    one_level = _rel_paths(
+        scan(root, SearchOptions(max_depth=1, excluded=excluded), _never)
+    )
     assert os.path.join('invoices 2026', 'deep') in one_level
     assert os.path.join('invoices 2026', 'deep', 'umlaut.txt') not in one_level
 
-    folders = _rel_paths(scan(root, SearchOptions(kind=KIND_FOLDERS, excluded=excluded), _never))
+    folders = _rel_paths(
+        scan(root, SearchOptions(kind=KIND_FOLDERS, excluded=excluded), _never)
+    )
     assert folders == ['invoices 2026', os.path.join('invoices 2026', 'deep')]
 
-    files = _rel_paths(scan(root, SearchOptions(kind=KIND_FILES, excluded=excluded), _never))
+    files = _rel_paths(
+        scan(root, SearchOptions(kind=KIND_FILES, excluded=excluded), _never)
+    )
     assert 'invoices 2026' not in files and 'notes.txt' in files
 
 
 def test_search(root):
-    options = SearchOptions(query='2026', excluded=frozenset(['.git']))
-    assert _rel_paths(search(root, options, _never)) == ['invoices 2026', 'report 2026.pdf']
+    options = SearchOptions(
+        query='2026', excluded=frozenset(['.git'])
+    )
+    assert _rel_paths(search(root, options, _never)) == [
+        'invoices 2026',
+        'report 2026.pdf',
+    ]
 
     scanned = []
     options = SearchOptions(text='hello', excluded=frozenset(['.git']))
@@ -101,7 +114,9 @@ def test_search(root):
         os.path.join('invoices 2026', 'deep', 'umlaut.txt')
     ]
 
-    options = SearchOptions(query='*.txt;*.pdf', mode=MODE_GLOB, excluded=frozenset(['.git']))
+    options = SearchOptions(
+        query='*.txt;*.pdf', mode=MODE_GLOB, excluded=frozenset(['.git'])
+    )
     assert _rel_paths(search(root, options, _never)) == [
         os.path.join('invoices 2026', 'deep', 'umlaut.txt'),
         os.path.join('invoices 2026', 'fraenk.pdf'),

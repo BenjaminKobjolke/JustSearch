@@ -65,8 +65,10 @@ class SearchDialog(QDialog):
         form.addRow('Match', _row(self._mode, QLabel('Find'), self._kind,
                                    QLabel('Depth (0 = this folder only)'), self._depth))
         form.addRow('&Folder (F2)', self._folder)
-        form.addRow(self._text_enabled, _row(self._text, QLabel('Encoding'), self._encoding,
-                                             self._ignore_case))
+        form.addRow(
+            self._text_enabled,
+            _row(self._text, QLabel('Encoding'), self._encoding, self._ignore_case),
+        )
 
         self._results = QListWidget()
         self._results.itemActivated.connect(self._jump)
@@ -90,7 +92,9 @@ class SearchDialog(QDialog):
         self._query.setEditText(options.query)
         self._mode.setCurrentIndex(max(0, self._mode.findData(options.mode)))
         self._kind.setCurrentIndex(max(0, self._kind.findData(options.kind)))
-        self._depth.setValue(DEPTH_ALL if options.max_depth is None else options.max_depth)
+        self._depth.setValue(
+            DEPTH_ALL if options.max_depth is None else options.max_depth
+        )
         self._folder.setText(folder)
         self._text_enabled.setChecked(settings.text_search_enabled())
         self._encoding.setEditText(options.encoding)
@@ -160,8 +164,16 @@ class SearchDialog(QDialog):
             batch.append(hit)
         self._hits.extend(batch)
         self._results.addItems([hit.path for hit in batch])
-        state = 'stopped' if self._stop.is_set() else 'done' if finished else 'searching'
-        self._status.setText('%d found, %d scanned (%s)' % (len(self._hits), self._scanned, state))
+        state = (
+            'stopped'
+            if self._stop.is_set()
+            else 'done'
+            if finished
+            else 'searching'
+        )
+        self._status.setText(
+            '%d found, %d scanned (%s)' % (len(self._hits), self._scanned, state)
+        )
         if finished:
             self._timer.stop()
             self._worker = None
@@ -190,7 +202,11 @@ class SearchDialog(QDialog):
         self.close()
 
     def keyPressEvent(self, event):
-        focus = {Qt.Key_F1: self._query, Qt.Key_F2: self._folder, Qt.Key_F3: self._results}
+        focus = {
+            Qt.Key_F1: self._query,
+            Qt.Key_F2: self._folder,
+            Qt.Key_F3: self._results,
+        }
         if event.key() in focus:
             if event.key() == Qt.Key_F3 and self._results.currentRow() < 0:
                 self._results.setCurrentRow(0)

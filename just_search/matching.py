@@ -34,7 +34,10 @@ def build_matcher(query, mode):
         return lambda rel_path: _contains_in_order(rel_path.lower(), tokens)
     if mode == MODE_GLOB:
         parts = (part.strip() for part in query.split(GLOB_SEPARATOR))
-        pattern = re.compile('|'.join(fnmatch.translate(part) for part in parts if part), re.IGNORECASE)
+        pattern = re.compile(
+            '|'.join(fnmatch.translate(part) for part in parts if part),
+            re.IGNORECASE,
+        )
         return lambda rel_path: bool(pattern.match(_leaf(rel_path)))
     if mode == MODE_REGEX:
         pattern = re.compile(query, re.IGNORECASE)
@@ -46,7 +49,10 @@ def build_matcher(query, mode):
 
 
 def file_contains(path, text, encoding, stop, ignore_case=False):
-    """True if `text` occurs in the file. `encoding` must be valid (see codecs.lookup)."""
+    """True if `text` occurs in the file.
+
+    `encoding` must be valid (see codecs.lookup).
+    """
     if ignore_case:
         text = text.casefold()
     try:

@@ -20,7 +20,15 @@ def last_options():
     """The dialog's last options. `text` is empty when text search was off."""
     saved = _settings().get('options', {})
     options = SearchOptions(excluded=excluded_folders())
-    for name in ('query', 'mode', 'kind', 'max_depth', 'text', 'encoding', 'ignore_case'):
+    for name in (
+        'query',
+        'mode',
+        'kind',
+        'max_depth',
+        'text',
+        'encoding',
+        'ignore_case',
+    ):
         if name in saved:
             setattr(options, name, saved[name])
     if not text_search_enabled():
