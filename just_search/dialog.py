@@ -9,7 +9,7 @@ import threading
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import (
     QCheckBox, QComboBox, QDialog, QFormLayout, QHBoxLayout, QLabel, QLineEdit,
-    QListWidget, QPushButton, QSpinBox, QVBoxLayout
+    QListWidget, QMessageBox, QPushButton, QSpinBox, QVBoxLayout
 )
 from fman.url import as_human_readable, as_url
 
@@ -31,6 +31,7 @@ class SearchDialog(QDialog):
         self._queue = queue.Queue()
         self._stop = threading.Event()
         self._worker = None
+        self._worker_error = None
         self._scanned = 0
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowFlags(Qt.Window)
@@ -125,6 +126,7 @@ class SearchDialog(QDialog):
         self._hits = []
         self._results.clear()
         self._scanned = 0
+        self._worker_error = None
         self._stop.clear()
         self._root_url = as_url(folder)
         self._worker = threading.Thread(
@@ -136,9 +138,13 @@ class SearchDialog(QDialog):
     def _run(self, folder, options):
         def count(_hit):
             self._scanned += 1
-        for hit in search(folder, options, self._stop.is_set, count):
-            self._queue.put(hit)
-        self._queue.put(None)   # end marker
+        try:
+            for hit in search(folder, options, self._stop.is_set, count):
+                self._queue.put(hit)
+        except Exception as error:
+            self._queue.put(error)
+        finally:
+            self._queue.put(None)   # end marker
 
     def _drain(self):
         batch = []
@@ -148,6 +154,9 @@ class SearchDialog(QDialog):
             if hit is None:
                 finished = True
                 break
+            if isinstance(hit, Exception):
+                self._worker_error = hit
+                continue
             batch.append(hit)
         self._hits.extend(batch)
         self._results.addItems([hit.path for hit in batch])
@@ -157,7 +166,12 @@ class SearchDialog(QDialog):
             self._timer.stop()
             self._worker = None
             self._set_running(False)
-            if self._hits:
+            if self._worker_error:
+                QMessageBox.critical(
+                    self, 'Search failed', str(self._worker_error)
+                )
+                self._worker_error = None
+            elif self._hits:
                 self._show_in_pane()
 
     def _stop_search(self):
