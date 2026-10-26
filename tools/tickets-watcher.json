@@ -20,5 +20,15 @@
     "tools\\analyze_changed_and_new_files.bat": {
       "code_quality": "green"
     }
-  }
+  },
+  "files": {
+    "TICKETS_WATCHER_COMMANDS.md": 3
+  },
+  "command_check_scripts": [
+    "analyze_changed_and_new_files.bat",
+    "analyze_code.bat",
+    "analyze_code_config.bat",
+    "analyze_code_config.example.bat",
+    "graphify_update.bat"
+  ]
 }
